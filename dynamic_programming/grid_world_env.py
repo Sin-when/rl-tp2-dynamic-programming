@@ -129,3 +129,21 @@ class GridWorldEnv(gym.Env):
                 else:
                     print(self.grid[row, col], end=" ")
             print("")  # Newline at the end of the row
+
+
+    def get_next_states(self, action: int) -> list[tuple[int, float, bool, float, bool]]:
+        """
+        Returns a list of possible next states, rewards, probabilities, and done
+        flags for a given action.
+
+        Args:
+            action (int): The action to take.
+
+        Returns:
+            list[tuple[int, float, bool, float, bool]]: A list of tuples, where each
+            tuple contains the next state, reward, probability, and done flag
+            for a possible next state resulting from the given action.
+        """
+        next_state, reward, _, _ = self.step(action, make_move=False)
+        return [(next_state, reward, True, None, False)]
+

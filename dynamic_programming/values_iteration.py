@@ -25,7 +25,17 @@ def mdp_value_iteration(mdp: MDP, max_iter: int = 1000, gamma=1.0) -> np.ndarray
     https://en.wikipedia.org/wiki/Markov_decision_process#Value_iteration
     """
     values = np.zeros(mdp.observation_space.n)
+
     # BEGIN SOLUTION
+    # This video is very useful : https://www.youtube.com/watch?v=iiUVbKn1XZs
+    for i in range(max_iter):
+        prev_val = values.copy()
+        for state in range(mdp.observation_space.n):
+            check = [(reward + gamma * prev_val[next_state]) for next_state, reward, _ in mdp.P[state]]
+            values[state] = max(check)
+        
+        if np.array_equal(values, prev_val):
+            break
     # END SOLUTION
     return values
 
@@ -42,6 +52,17 @@ def grid_world_value_iteration(
     """
     values = np.zeros((4, 4))
     # BEGIN SOLUTION
+    for _ in range(max_iter):
+        prev_val = values.copy()
+        delta = 0
+        for row in range(env.height):
+            for col in range(env.width):
+                env.current_position = (row, col)
+                delta += value_iteration_per_state(env, values, gamma, prev_val, delta)
+        if delta < theta:
+            break
+    return values
+
     # END SOLUTION
 
 
@@ -72,3 +93,16 @@ def stochastic_grid_world_value_iteration(
 ) -> np.ndarray:
     values = np.zeros((4, 4))
     # BEGIN SOLUTION
+    for _ in range(max_iter):
+        prev_val = values.copy()
+        delta = 0
+        for row in range(env.height):
+            for col in range(env.width):
+                env.current_position = (row, col)
+                delta += value_iteration_per_state(env, values, gamma, prev_val, delta)
+        if delta < theta:
+            break
+    return values
+
+
+
